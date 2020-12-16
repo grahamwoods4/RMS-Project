@@ -1,0 +1,49 @@
+Guide to cleaning the RMS data set on excel
+
+
+Open a new excel sheet and select "Get Data" -> "From File" -> "Text/CSV"
+	-Click on "transform data" on the bottom of the window once the data has been selected 
+
+Click "Choose columns" and select only the columns with data present (All odd numbered columns)
+
+
+Select all (Ctrl + A on windowns) and Click "Replace Values"
+	- Replace "{" with ""
+	- Replace "}" with ""
+
+Click "Use First row as headers"
+
+Click "Close and load"
+
+
+Now Import data set into R
+
+#R version 4.0.2 (2020-06-22)
+#Platform: x86_64-w64-mingw32/x64 (64-bit)
+#Running under: Windows 10 x64 (build 19042)
+#stringr_1.4.0 readxl_1.3.1  dplyr_1.0.2
+
+#load libraries
+sessionInfo() # tells you the version of packages loaded
+library(dplyr)
+library(readxl)
+library(stringr)
+
+#import cleaned data set from excel
+RMSdata <- read_excel("C:/Users/Drose/iCloudDrive/RMS PROJECT/RMSdata.xlsx")
+View(RMSdata)
+
+#fixing dates in the WkStart column to the correct years.
+RMSdata$WkStart <- stringr::str_replace(RMSdata$WkStart, '202', '201')
+
+#saving the data to an object called mydata.
+mydata1 <- RMSdata
+
+#creating a separate data frame of just one store with a high average imputed sales
+Store6145 <- mydata1 %>% filter(Store == 6145)
+
+#creating a separate data frame of just one store with a low average imputed sales
+Store103 <- mydata1 %>% filter(Store == 103)
+
+#creating a separate data frame of just one store with an average around the average
+Store349 <- mydata1 %>% filter(Store == 349)
